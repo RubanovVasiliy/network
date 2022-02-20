@@ -1,0 +1,7 @@
+*.csv
+*.out
+*.txt
+main
+.vscode
+.idea
+cmake*

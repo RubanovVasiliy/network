@@ -1,0 +1,5 @@
+language: c
+compiler: gcc
+script:   
+  - make && make run
+  - git ls-files src/ | xargs clang-format -i && git diff --exit-code
