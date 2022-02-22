@@ -6,7 +6,6 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <sys/types.h>
 
 #define BUF_SIZE 81
 
