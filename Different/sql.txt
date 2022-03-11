@@ -1,0 +1,78 @@
+Cities - список городов
+
+id - первичный ключ
+name - название
+population - численность населения
+founded - год основания
+country_id - id страны
+
+Countries - список стран
+
+id - первичный ключ
+name - название
+population - численность населения
+gdp - валовый продукт в долларах
+
+Companies - компании
+
+id - первичный ключ
+name - название
+city_id - город в котором находится штаб-квартира
+revenue - годовая выручка в долларах
+labors - численность сотрудников
+
+Постройте таблицу, где для каждой страны посчитано число компаний, удволетворяющих условиям:
+
+1) штаб квартира компании находится в этой стране
+2) число сотрудников компании не менее 1000 человек
+
+
+CREATE TABLE Countries (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  population INTEGER NOT NULL,
+  gdp INTEGER NOT NULL
+);
+
+INSERT INTO Countries VALUES (1, 'RUSSIA',  200, 1890);
+INSERT INTO Countries VALUES (2, 'GERMANY', 100, 1990);
+INSERT INTO Countries VALUES (3, 'USA',     500, 2000);
+
+CREATE TABLE Cities (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  population INTEGER NOT NULL,
+  founded INTEGER NOT NULL,
+  country_id INTEGER NOT NULL,
+  FOREIGN KEY (country_id)  REFERENCES Countries (id)
+);
+
+INSERT INTO Cities VALUES (1, 'NSK',    2000000,    1890, 1);
+INSERT INTO Cities VALUES (2, 'MSK',    1000000,    1990, 1);
+INSERT INTO Cities VALUES (3, 'KSK',    500000,     2000, 1);
+INSERT INTO Cities VALUES (4, 'SK111',  5000000,    1890, 2);
+INSERT INTO Cities VALUES (5, 'SK222',  2000000,    1990, 2);
+INSERT INTO Cities VALUES (6, 'usa',    100000,     2000, 3);
+
+CREATE TABLE Companies (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  city_id INTEGER NOT NULL,
+  revenue INTEGER NOT NULL,
+  labors INTEGER NOT NULL,
+  FOREIGN KEY (city_id)  REFERENCES Cities (id)
+);
+
+INSERT INTO Companies VALUES (1, 'VK',      1,    1890, 2000);
+INSERT INTO Companies VALUES (2, 'YA',      2,    1990, 999);
+INSERT INTO Companies VALUES (3, 'RU',      3,    2000, 5000);
+INSERT INTO Companies VALUES (4, 'BOSCH',   4,    1890, 1000);
+INSERT INTO Companies VALUES (5, 'AEG',     5,    1990, 100);
+INSERT INTO Companies VALUES (6, 'AMAZON',  6,    2000, 2000);
+
+
+SELECT Countries.name, count(*) AS CompaniesCount
+FROM Cities, Countries, Companies
+WHERE Cities.country_id == Countries.id AND Companies.id == Cities.id AND Companies.labors >= 1000
+GROUP BY Countries.name
+ORDER BY Countries.id;
